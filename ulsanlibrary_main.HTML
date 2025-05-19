@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>울산 통합 도서관</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <style>
+        #container{
+            font-family: Arial, Helvetica, sans-serif;
+            width:1920px;
+            background-image: url(https://i.postimg.cc/nz17vCF7/library.jpg);   /* 배경이미지를 업로드 사이트를 통해 연결*/
+            background-size:cover;
+            display:grid;
+            margin:0 auto;
+            grid-template-columns: 15% 70% 15%;
+            grid-template-areas: 
+                'header header header'
+                'nav nav nav'
+                'aleft section aright'
+                'footer footer footer';
+        }
+        #header{
+            grid-area: header;
+            background-color: rgb(61, 27, 3);
+            color:white;
+            padding: 10px;
+            text-align: center;
+        }
+        #header a{
+            text-decoration: none;
+            color: inherit; 
+        }
+        #nav{
+            grid-area:nav;
+            background-color: rgba(255, 255, 255, 0.72);    /* 배경 칼러에 투명도 추가 */
+            border-bottom: 1px solid rgb(80, 9, 9);
+        }
+        #nav ul{
+            text-align: center;
+            padding: 0;
+            margin:0px 15px;
+            font-size: 20px;
+            line-height:60px;
+        }
+        #nav li{
+            list-style: none;
+            display:inline;
+            padding: 0;
+        }
+        #nav a{
+            text-decoration: none;
+            color:rgb(80, 9, 9);
+            padding:20px;
+        }
+        #nav a:hover{
+            padding:20px;
+            background-color:rgb(80,9,9);
+            color:white;
+        }
+        #aleft{ 
+            width:100%;
+            grid-area: aleft;
+            margin:10px;
+            text-align: center;
+        }
+        #logout-btn,#welcome-msg{
+            display: none;
+        }
+        #welcome-msg{
+            font-size: 20px;
+        }
+        #login-area input,#search-txt {
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #666;
+            border-radius: 5px;
+            margin:5px;
+        }
+  
+        #login-form button,#search button{
+            padding: 12px 18px;
+            background: rgb(80, 9, 9);
+            color: white;
+            border-radius: 5px;  
+            margin:5px;
+            width:120px;
+            
+        }
+        button:hover {
+            background: rgb(53, 5, 5);
+        }
+        h2,h3{
+            padding-top: 20px;
+            color:rgb(44, 3, 3);
+            text-shadow : 2px 2px 5px white;
+        }
+        #bestseller{
+            background: rgba(255, 255, 255, 0.543);   /* 배경 칼러에 투명도 추가 */
+            border-radius: 10px;
+            height:1070px;
+            padding:20px,0;
+            margin:20px;
+           
+        }
+        #bestseller img{
+            width:200px;
+            height:300px;
+            padding:5px;
+        }
+        #section{
+            width:100%;
+            grid-area: section;
+            text-align: left;
+        }
+        #contents{
+            display: none;
+        }  
+        #search {
+            
+            text-align: center;
+            gap: 10px;
+            margin-bottom:20px;
+        }
+        .preview{
+            width:45%;
+            height:auto;
+            display:inline-block;
+            background: rgba(255, 255, 255, 0.803);  /* 배경 칼러에 투명도 추가 */
+            margin:10px auto;
+            margin-left: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);  /* 배경 칼러에 투명도 추가 */
+            overflow: hidden;
+        }
+        
+        #aright{
+            background-color: rgba(255, 255, 255, 0.72);  /* 배경 칼러에 투명도 추가 */
+            grid-area: aright;
+            font-size: 20px;
+            color:rgb(93, 6, 6);
+            text-align: center;
+            padding-top:10px;
+            margin:10px 20px;
+            border-radius: 10px;
+        }
+        #aright ul{
+            padding-left: 0px;
+            list-style: none;
+            background-color: rgb(93, 6, 6);
+        }
+        #aright li{
+            font-size: 20px;
+            padding: 10px;
+            color:white;
+        }    
+        #aright a{
+            text-decoration: none;
+            color:white;
+        }  
+        #aright a:hover{
+            padding:10px 35px;
+            background-color: white;
+            color:rgb(93, 6, 6);
+        }
+        #integlib {
+            margin: 0px;
+            color:black;
+        }
+        #integlib p{
+            margin:0;
+            font-size: 12px;
+        }  
+        #footer{
+            grid-area: footer;
+            background-color: rgb(54, 4, 4);
+            color:white;
+            line-height:50px;
+            height:auto;
+        }
+        #footer span{
+            padding:20px;
+            margin:20px;
+        }
+        @media screen and (max-width: 800px) {                  /* 인터프리터 방식상 일부 스타일 미적용오류로 스타일 태그 하단배치*/
+            #container {                                        
+                font-family: Arial, Helvetica, sans-serif;
+                width: 100%;                                                          
+                background-image: url(https://i.postimg.cc/nz17vCF7/library.jpg);    /* 배경이미지를 업로드 사이트를 통해 연결*/
+                background-size: cover;
+                display: grid;
+                grid-template-columns: 1fr;
+                grid-template-areas: 
+                    'header'
+                    'nav'
+                    'aleft'
+                    'aright'
+                    'section'
+                    'footer';
+            }
+            .preview {
+             width: 100%;  /* 너비를 전체로 변경 */
+             height: auto;
+            display: block;
+            }
+            input{
+                width:50%;
+            }
+            #footer span{
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="header">
+            <a href="http://127.0.0.1:5500/ulsanlibrary_main.HTML"> 
+            <h1>책사랑 울산 통합 도서관</h1>
+            <p>울산에 있는 모든 도서관 정보들를 한 눈에 쉽게 확인 할수 있어요. 필요한 정보를 편리하게 찾아보세요!</p>
+            </a>
+        </div>
+        <div id="nav">
+            <ul>
+                <li><a href="http://127.0.0.1:5500/introlib.html" id="introLink">도서관 소개</a></li>
+                <li><a href="#">공지 사항</a></li>
+                <li><a href="#">희망 도서</a></li>
+                <li><a href="#">문화 행사</a></li>
+                <li><a href="#">의견 문의</a></li>
+                <li><a href="#">커뮤니티</a></li>
+            </ul>
+        </div>
+        <div id="aleft">
+            <div id="login">
+                <form id="login-form">
+                    <div id="login-area">
+                        <input type="text" id="username" placeholder="아이디" required><br>
+                        <input type="password" id="usepassword" placeholder="비밀번호" required><br>
+                    </div>
+                        <span id="welcome-msg"></span><br>
+                        <button type="submit" id="login-btn">로그인</button>
+                        <button type="button" id="logout-btn">로그아웃</button>
+                        <button type="button" id="signup-btn">회원가입</button>
+                        <button type="button" id="findid-btn">아이디 찾기</button>
+                        <button type="button" id="findpw-btn">비밀번호 찾기</button>
+                </form>
+            </div>
+    
+            <div id="bestseller">
+                <h3>이달의 추천도서</h3>
+                <img src="https://i.postimg.cc/634Ln97f/trump.jpg"><br>        <!-- https://postimages.org/ko/ -->
+                <img src="https://i.postimg.cc/CMtX31HS/mind.jpg"><br>         <!-- 이미지 업로드 사이트에서 이미지 업로드후-->
+                <img src="https://i.postimg.cc/kMbPXK5B/linchpin.jpg"><br>     <!-- 연결 링크를 가져와서 게시-->
+            </div>
+        </div>
+        <div id="section">
+            <div id="contents">
+            </div>
+            <div id="search">
+                <h2>도서 검색</h2>
+                <input type="text" size="80" id="search-txt" placeholder="찾고 싶은 책을 입력하세요">
+                <button>검색</button>
+            </div>
+        
+            <div class="preview" >
+            <h3>공지사항</h3>
+            <a href="#">[ 더보기 ]</a>
+            <dl>
+                <dt>■ 희망도서 입고 안내</dt>
+                <dd>- 울산도서관,남부도서관,남구구립도서관,중구구립도서관....</dd>
+                <dt>■ 도서관별 휴관 안내</dt>
+                <dd>- 모든 도서관 월요일 휴관 설,추석연휴 휴관입니다.</dd>
+                <dt>■ 회원 가입 안내</dt>
+                <dd>- 대출관련 회원가입은 각 도서관에서 별도로 안내받으시길 바랍니다.</dd>
+                <dt>■ 독서 프로그램 모집 안내</dt>
+                <dd>- 어린이, 성인별 독서 관련 동아리 참가자를 모집합니다.</dd>
+                <dt>■ 각 도서관별 행사 및 전시안내</dt>
+                <dd>- 울산도서관 1층 시청각실 영화상영안내, 중구 종갓집도서관 작가초청 안내...</dd>
+                <dt>■ 이용자 의견 접수 안내</dt>
+                <dd>- 도서관 통합 사이트 이용과 관련해서 서비스 개선 의견을 듣습니다.</dd>
+            </dl>
+            </div>
+            <div class="preview" >
+                <h3>도서 문화 행사</h3>
+                <a href="#">[ 더보기 ]</a>
+                <dl>
+                <dt>● 독서프로그램</dt>
+                <dd>- 어린이 동화읽기 프로그램과 성인 독서토론 모임 가능 도서관 안내</dd>
+                <dt>● 작가 초청강연 안내</dt>
+                <dd>- ㅇㅇ작가님 초청 강연 남부도서관 ㅇ월ㅇ일, A작가님 초청 강연 동부도서관 4월1일</dd>
+                <dt>● 문화 예술공연 안내</dt>
+                <dd>- 울산도서관 대공연장에서 가족 뮤지컬공연 ㅇ월ㅇ일, 종갓집 도서관 야외마당에서 클래식 음악공연 ㅇ월ㅇ일</dd>
+                <dt>● 전시회 안내</dt>
+                <dd>- 울주 도서관 갤러리에서 ㅇㅇ사진전 개최 ㅇ월ㅇ일 ~ ㅇ월ㅇ일, 강동바다도서관에서 지역 작가들의 작품을 감상할수 있는 특별 전시회가 열립니다.</dd>
+                <dt>● 글쓰기 창작 워크숍 안내</dt>
+                <dd>- 선바위도서관 시 창작 워크숍 참가자를 모집합니다(ㅇㅇ강사 진행)</dd>
+                </dl>
+            </div>
+            <div class="preview" >
+                <h3>희망 도서</h3>
+                <a href="#">[ 더보기 ]</a>
+                <dl>
+                    <dt>◆ 트럼프 시대의 지정학과 비트코인</dt>
+                    <dd>- 울산도서관, 남부도서관, 신복도서관, 월봉도서관, 도산도서관, 종갓집도서관, 약숫골도서관 입고</dd>
+                    <dt>◆ 린치핀</dt>
+                    <dd>- 태화루도서관, 옥골샘도서관, 함월도서관, 외솔한옥도서관, 우정도서관, 학성도서관 입고</dd>
+                    <dt>◆ 더 마인드</dt>
+                    <dd>- 중앙도서관, 기적도서관, 농소3동도서관, 송정나래도서관, 매곡도서관, 농소1동도서관, 염포양정도서관, 강동바다도서관 입고</dd>
+                    <dt>◆ 레버리지</dt>
+                    <dd>- 동부도서관, 남목도서관, 꽃바위작은도서관, 화정아이꿈누리도서관, 전하작은도서관 입고 </dd>
+                    <dt>◆ 리얼리티 트랜서핑1,2,3</dt>
+                    <dd>- 울주도서관, 울주선바위도서관, 울주옹기도서관, 울주천상도서관 입고</dd>
+                    </dl>
+            </div>
+            <div class="preview">
+                <h3>커뮤니티</h3>
+                <a href="#">[ 더보기 ]</a>
+                <dl>
+                    <dt>★ [추천 도서] 이 책 정말 재밌어요!</dt>
+                    <dd>- "안녕하세요! 최근에 『○○○』을 읽었는데 너무 감동적이어서 추천하고 싶어요"</dd>
+                    <dt>★ [질문] 전자도서관 이용 방법 알려주세요!</dt>
+                    <dd>- "안녕하세요, 도서관 전자책을 처음 이용해보려고 하는데요. 회원가입은 했는데 어떻게 대출하고 읽는지 잘 모르겠어요.</dd>
+                    <dt>★ [이벤트 후기] 작가 초청 강연 다녀왔어요!</dt>
+                    <dd>- "지난주 ○○ 작가님 초청 강연에 다녀왔어요! 직접 작가님을 뵙고 이야기를 들을 수 있어서 너무 뜻깊은 시간이었어요. </dd>
+                    <dt>★ [독서 모임 모집] 같이 책 읽고 이야기 나눠요!</dt>
+                    <dd>- "안녕하세요! 매달 한 권씩 책을 읽고 함께 이야기 나누는 독서 모임을 만들려고 해요. 관심 있으신 분들은 댓글 달아주세요! </dd>
+                    <dt>★ [도서관 이용 후기] 새로 단장된 열람실 좋아요!</dt>
+                    <dd>- "얼마 전에 도서관 열람실이 새롭게 리모델링되었는데요, 책상 간격도 넓어지고 조명이 밝아져서 공부하기 훨씬 좋아졌어요! </dd>
+                    </dl>
+            </div>
+        </div>
+        <div id="aright">
+            <caption>도서관 바로가기</caption>
+            <ul>
+                <li><a href="https://library.ulsan.go.kr/" target="_blank">울산도서관</a></li>
+                <li><a href="https://www.usnl.or.kr/" target="_blank">남부도서관</a></li>
+                <li><a href="https://www.usdl.or.kr/index.do" target="_blank">동부도서관</a></li>
+                <li><a href="https://www.usul.or.kr/" target="_blank">울주도서관</a></li>
+                <li><a href="https://www.ulsannamgu.go.kr/library/" target="_blank">남구구립도서관</a></li>
+                <li><a href="https://lib.junggu.ulsan.kr/lib/" target="_blank">중구구립도서관</a></li>
+                <li><a href="https://usbl.bukgu.ulsan.kr/" target="_blank">북구구립도서관</a></li>    
+                <li><a href="https://library.donggu.ulsan.kr/" target="_blank">동구통합도서관</a></li>
+                <li><a href="https://uljulib.ulju.ulsan.kr/" target="_blank">울주통합도서관</a></li>
+            </ul>
+            <div id="integlib">
+                <p><hr>남구구립도서관</p>
+                <p>도산도서관</p>
+                <p>신복도서관</p>
+                <p>월봉도서관</p>
+                <p>옥현어린이도서관</p>
+                <p><hr>중구구립도서관</p>
+                <p>울산종갓집도서관</p>
+                <p>약숫골도서관</p>
+                <p>태화루도서관</p>
+                <p>옥골샘도서관</p>
+                <p>함월도서관</p>
+                <p>외솔한옥도서관</p>
+                <p>우정도서관</p>
+                <p>학성도서관</p>
+                <p>산전만화도서관</p>
+                <p>남외어린이도서관</p>
+                <p><hr>북구구립도서관</p>
+                <p>중앙도서관</p>
+                <p>기적도서관</p>
+                <p>매곡도서관</p>
+                <p>농소1동도서관</p>
+                <p>농소3동도서관</p>
+                <p>염포양정도서관</p>
+                <p>명촌어린이도서관</p>
+                <p>강동바다도서관</p>
+                <p>송정나래도서관</p>
+                <p><hr>동구통합도서관</p>
+                <p>남목도서관</p>
+                <p>꽃바위작은도서관</p>
+                <p>화정아이꿈누리도서관</p>
+                <p>전하작은도서관</p>
+                <p>마성만화도서관</p>
+                <p><hr>울주통합도서관</p>
+                <p>울주선바위도서관</p>
+                <p>울주옹기종기도서관</p>
+                <p>울주천상도서관</p>
+                <p></p>
+            </div>
+        </div>
+        <div id="footer">
+            <span>웹사이트 제작자 : 변가단 </span>
+            <span>이메일 : jadan1024@naver.com</span>
+            <span>Copyright 2025. All Rights Reserved.</span>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#login-form').on('submit', function (e) {
+                e.preventDefault(); // 폼 전송 막기
+    
+                let username = $('#username').val();
+                let password = $('#usepassword').val();
+    
+                if (username === 'qwer1234' && password === 'asdf1234') {
+                    // 로그인 성공
+                    $('#login-area').hide();
+                    $('#login-btn').hide();
+                    $('#welcome-msg').show();
+                    $('#welcome-msg').text(username + '님 환영합니다');
+                    $('#logout-btn').show();
+                    $('#signup-btn').hide();
+                    $('#findid-btn').hide();
+                    $('#findpw-btn').hide();
+                } else {
+                    alert('아이디 또는 비밀번호가 잘못되었습니다.');
+                }
+            });
+    
+            $('#logout-btn').on('click', function () {
+                // 로그아웃 처리
+                $('#username').val('');
+                $('#usepassword').val('');
+                $('#login-area').show();
+                $('#login-btn').show();
+                $('#logout-btn').hide();
+                $('#welcome-msg').hide();
+                $('#signup-btn').show();
+                $('#findid-btn').show();
+                $('#findpw-btn').show();
+
+            });
+            $("#signup-btn").click(function () {
+                // .section 영역 내의 .search와 .preview 숨기기
+                $('#search').hide();
+                $('.preview').hide();
+                $('#contents').hide().fadeIn(1000);  // 서서히 나타나기 효과
+            
+             $.get("http://127.0.0.1:5500/ulsanlibrary_signup.html", function (data) {
+                        $('#contents').html(data);
+                    });
+             });
+             $("#findid-btn").click(function () {
+                // .section 영역 내의 .search와 .preview 숨기기
+                $('#search').hide();
+                $('.preview').hide();
+                $('#contents').hide().fadeIn(1000); // 서서히 나타나기 효과
+        
+             $.get("http://127.0.0.1:5500/ulsanlibraryproject/ulsanlibrary_detail/ulsanlibrary_findid.html", function (data) {
+                        $('#contents').html(data);
+                    });
+            });
+            $("#findpw-btn").click(function () {
+                // .section 영역 내의 .search와 .preview 숨기기
+                $('#search').hide();
+                $('.preview').hide();
+                $('#contents').hide().fadeIn(1000); // 서서히 나타나기 효과
+        
+             $.get("http://127.0.0.1:5500/ulsanlibraryproject/ulsanlibrary_detail/ulsanlibrary_findpw.html", function (data) {
+                        $('#contents').html(data);
+                    });
+            });
+
+            $('#introLink').click(function(e) {
+                e.preventDefault(); // 링크 기본 동작 막기
+                $('#search').hide();
+                $('.preview').hide();
+                $('#contents').hide().fadeIn(1000); // 서서히 나타나기 효과
+                 // library_intro.html 파일을 #contents 안에 로드
+                $('#contents').load('http://127.0.0.1:5500/ulsanlibraryproject/ulsanlibrary_detail/introlib.html')
+            });
+        });
+    </script>
+</body>
+</html>
